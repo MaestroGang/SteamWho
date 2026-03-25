@@ -487,6 +487,7 @@ function showCurrentGuess(isRetry = false) {
 function handleGuess(answerType) {
     if (answerType === "yes") {
         const winner = state.guessOrder[state.guessIndex]?.character;
+        saveToLeaderboard(winner);
         setQuestionText(`Ho indovinato! È ${winner?.name}!`, "Il Genio è imbattibile!");
         finishGame(true);
         return;
@@ -524,6 +525,35 @@ function handleGuess(answerType) {
     );
 
     askNextQuestion();
+}
+
+function saveToLeaderboard(character) {
+    if (!character) return;
+
+    const key = "genio_indovino_leaderboard";
+
+    let list = [];
+
+    try {
+        list = JSON.parse(localStorage.getItem(key)) || [];
+    } catch {
+        list = [];
+    }
+
+    const existing = list.find(c => c.id === character.id);
+
+    if (existing) {
+        existing.count++;
+    } else {
+        list.push({
+            id: character.id,
+            name: character.name,
+            image: character.image,
+            count: 1
+        });
+    }
+
+    localStorage.setItem(key, JSON.stringify(list));
 }
 
 function finishGame(won) {
