@@ -74,51 +74,21 @@ function saveImageCache() {
     } catch {}
 }
 
-function readCachedImage(name) {
-    const key = normalizeName(name);
-    const row = state.imageCache[key];
-
-    if (!row || typeof row !== "object") return "";
-
-    if (!row.url || typeof row.url !== "string") {
-        delete state.imageCache[key];
-        return "";
+function setSafeImage(img, src) {
+    if (!src || typeof src !== "string") {
+        img.src = "assets/fallback.png";
+        return;
     }
 
-    // 🔥 BLOCCA thumbnail
-    if (row.url.includes("/thumb/")) {
-        delete state.imageCache[key];
-        return "";
-    }
+    img.src = src;
 
-    if (!row.url.startsWith("https")) {
-        delete state.imageCache[key];
-        return "";
-    }
-
-    const age = Date.now() - row.ts;
-
-    if (age > CHARACTER_IMAGE_CACHE_TTL_MS) {
-        delete state.imageCache[key];
-        return "";
-    }
-
-    return row.url;
-}
-
-function writeCachedImage(name, url) {
-    const key = normalizeName(name);
-    const cleanUrl = sanitizeHttpUrl(url);
-
-    if (!key || !cleanUrl) return;
-
-    state.imageCache[key] = {
-        url: cleanUrl,
-        ts: Date.now()
+    img.onerror = function () {
+        console.warn("IMG ERROR:", src);
+        this.onerror = null;
+        this.src = "assets/fallback.png";
     };
-
-    saveImageCache();
 }
+
 
 // -------------------- CORE --------------------
 
@@ -166,16 +136,9 @@ function renderCharacters(list) {
         img.className = "character-thumb";
         img.alt = character.name;
         img.loading = "lazy";
-
-        const cached = readCachedImage(character.name);
-
-        if (cached) {
-            img.src = cached;
-        } else if (character.image) {
-            img.src = character.image;
-            img.onload = function () {
-                writeCachedImage(character.name, this.src);
-            };
+        
+        if (character.image) {
+            setSafeImage(img, character.image);
         } else {
             img.src = GUIDE_IMAGE_FALLBACK;
         }
@@ -183,7 +146,7 @@ function renderCharacters(list) {
         img.onerror = function () {
             console.warn("Errore immagine:", this.src);
         
-            // se è una thumb → prova originale
+            // se è una thumb prova originale
             if (this.src.includes("/thumb/")) {
                 const original = this.src
                     .replace("/thumb/", "/")
