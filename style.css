@@ -14,6 +14,7 @@
     --text-primary: var(--text-light);
     --text-secondary: #dbe9ff;
     --accent-light: #38a6ff;
+    --focus-ring: rgba(255, 222, 140, 0.85);
 }
 
 * {
@@ -37,6 +38,8 @@ body {
     overflow-x: hidden;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 .app-shell {
@@ -116,6 +119,12 @@ body {
 .top-nav a:hover {
     opacity: 1;
     color: #ffe5aa;
+}
+
+.top-nav a:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 4px;
+    border-radius: 8px;
 }
 
 .profile {
@@ -426,6 +435,16 @@ body {
     letter-spacing: 0.8px;
     color: #ffffff;
     text-shadow: 0 4px 0 rgba(0, 0, 0, 0.44);
+    text-wrap: balance;
+}
+
+.question-flash {
+    animation: questionFlash 0.18s ease;
+}
+
+@keyframes questionFlash {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .answers-grid {
@@ -483,6 +502,12 @@ body {
 
 .btn:active {
     transform: scale(0.95);
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(12, 33, 96, 0.7);
 }
 
 .btn.flash {
@@ -781,6 +806,8 @@ body {
     background: linear-gradient(180deg, rgba(9, 34, 89, 0.95) 0%, rgba(8, 24, 66, 0.98) 100%);
     box-shadow: 0 8px 16px rgba(0, 7, 36, 0.4);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    content-visibility: auto;
+    contain-intrinsic-size: 180px 240px;
 }
 
 .character-card:hover {
@@ -948,6 +975,15 @@ body.tutorial-open {
     0%,
     100% { opacity: 0.55; }
     50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
 }
 
 
