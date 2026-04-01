@@ -757,6 +757,8 @@ function preventDoubleTapZoom() {
     document.addEventListener("touchend", handler, { passive: false });
     if (el.btnYes) el.btnYes.addEventListener("touchend", handler, { passive: false });
     if (el.btnNo) el.btnNo.addEventListener("touchend", handler, { passive: false });
+    document.addEventListener("dblclick", (event) => event.preventDefault(), { passive: false });
+    document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
 }
 
 //FUNZIONI DI TEST

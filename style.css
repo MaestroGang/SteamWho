@@ -25,6 +25,10 @@ body {
     height: 100%;
 }
 
+html {
+    background: linear-gradient(180deg, #040f3c 0%, #0a2b76 100%);
+}
+
 body {
     margin: 0;
     font-family: "Montserrat", "Segoe UI", Tahoma, sans-serif;
@@ -1028,7 +1032,7 @@ body.tutorial-open {
 
     body:not(.page-guide) {
         height: 100svh;
-        min-height: 0;
+        min-height: 100svh;
         overflow: hidden;
         touch-action: manipulation;
         overscroll-behavior: none;
