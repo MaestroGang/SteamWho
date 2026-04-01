@@ -1013,9 +1013,8 @@ body.tutorial-open {
 
 /* ---------- MOBILE ---------- */
 @media (max-width: 700px) {
-    html,
-    body {
-        height: auto;
+    html {
+        height: 100%;
     }
 
     body {
@@ -1025,7 +1024,13 @@ body.tutorial-open {
     }
 
     body:not(.page-guide) {
+        height: 100dvh;
         overflow: hidden;
+    }
+
+    body.page-guide {
+        height: auto;
+        overflow-y: auto;
     }
 
     .app-shell {

@@ -706,6 +706,7 @@ function bootstrap() {
     showTutorial();
     if (el.btnYes) el.btnYes.addEventListener("click", () => onAnswer("yes"));
     if (el.btnNo) el.btnNo.addEventListener("click", () => onAnswer("no"));
+    preventDoubleTapZoom();
 }
 
 async function init() {
@@ -725,6 +726,17 @@ async function init() {
 }
 
 init();
+
+function preventDoubleTapZoom() {
+    let lastTouchEnd = 0;
+    document.addEventListener("touchend", (event) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
+}
 
 //FUNZIONI DI TEST
 
